@@ -22,6 +22,7 @@ func main() {
     // Create a dgc router
     router := &dgc.Router{
         // We will allow '!', '$' and the bot mention as command prefixes
+        // NOTE: The first prefix (in our case '!') will be used as the prefix in the default help messages
         Prefixes: []string{
             "!",
             "$",
@@ -67,6 +68,9 @@ func main() {
         // A brief description of the commands functionality
         Description: "Greets you",
 
+        // The correct usage of the command
+        Usage: "hey",
+
         // Whether or not the parser should ignore the case of our command
         IgnoreCase: true,
 
@@ -75,6 +79,7 @@ func main() {
             &dgc.Command{
                 Name: "world",
                 Description: "Greets the world",
+                Usage: "hey world",
                 IgnoreCase: true,
                 Handler: func(ctx *dgc.Ctx) {
                     _, err := ctx.Session.ChannelMessageSend(ctx.Event.ChannelID, "Hello, world.")
@@ -101,6 +106,9 @@ func main() {
         ctx.CustomObjects["myObjectName"] = "Hello, world"
         return true
     })
+
+    // Enable the default help command
+    router.RegisterDefaultHelpCommand(session)
 
     // Initialize the router to make it functional
     router.Initialize(session)
