@@ -128,7 +128,7 @@ func renderDefaultSpecificHelpEmbed(ctx *Ctx, command *Command) *discordgo.Messa
 	return &discordgo.MessageEmbed{
 		Type:        "rich",
 		Title:       "Command Information",
-		Description: "Displaying the information for the `" + command.Name + "`command.",
+		Description: "Displaying the information for the `" + command.Name + "` command.",
 		Timestamp:   time.Now().Format(time.RFC3339),
 		Color:       0xffff00,
 		Fields: []*discordgo.MessageEmbedField{
