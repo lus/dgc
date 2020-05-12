@@ -39,6 +39,11 @@ func main() {
             // ...
         },
 
+        // We can define middlewares in here, but in this example we will use the provided method (later)
+        Middlewares: []dgc.Middleware{
+            // ...
+        },
+
         // The ping handler will be executed if the message only contains the bot's mention (no arguments)
         PingHandler: func(ctx *dgc.Ctx) {
             _, err := ctx.Session.ChannelMessageSend(ctx.Event.ChannelID, "Pong!")
@@ -87,6 +92,14 @@ func main() {
                 // Error handling
             }
         },
+    })
+
+    // Add a simple middleware that injects a custom object into the context
+    // NOTE: You have to return true or false. If you return false, the command will not be executed
+    router.AddMiddleware(func(ctx *dgc.Ctx) bool {
+        // Inject a custom object into the context
+        ctx.CustomObjects["myObjectName"] = "Hello, world"
+        return true
     })
 
     // Initialize the router to make it functional
