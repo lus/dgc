@@ -23,6 +23,24 @@ type Arguments struct {
 	arguments []*Argument
 }
 
+// ParseArguments parses the raw string into several arguments
+func ParseArguments(raw string) *Arguments {
+	// Split the raw string and parse it into an array of arguments
+	split := strings.Split(raw, " ")
+	arguments := make([]*Argument, len(split))
+	for key, value := range split {
+		arguments[key] = &Argument{
+			raw: value,
+		}
+	}
+
+	// Return the arguments
+	return &Arguments{
+		raw:       raw,
+		arguments: arguments,
+	}
+}
+
 // Raw returns the raw string value of the arguments
 func (arguments *Arguments) Raw() string {
 	return arguments.raw
