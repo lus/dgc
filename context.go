@@ -8,4 +8,5 @@ type Ctx struct {
 	Event         *discordgo.MessageCreate
 	Arguments     *Arguments
 	CustomObjects map[string]interface{}
+	Router        *Router
 }

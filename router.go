@@ -14,6 +14,7 @@ type Router struct {
 	Commands         []*Command
 	Middlewares      []Middleware
 	PingHandler      CommandHandler
+	helpMessages     map[string]int
 }
 
 // Middleware defines how a middleware looks like
@@ -22,6 +23,67 @@ type Middleware func(*Ctx) bool
 // RegisterCmd registers a new command
 func (router *Router) RegisterCmd(command *Command) {
 	router.Commands = append(router.Commands, command)
+}
+
+// RegisterDefaultHelpCommand registers the default help command
+func (router *Router) RegisterDefaultHelpCommand(session *discordgo.Session) {
+	// Initialize the reaction add listener
+	session.AddHandler(func(session *discordgo.Session, event *discordgo.MessageReactionAdd) {
+		// Define useful variables
+		channelID := event.ChannelID
+		messageID := event.MessageID
+		userID := event.UserID
+
+		// Check whether or not the reaction was added by the bot itself
+		if event.UserID == session.State.User.ID {
+			return
+		}
+
+		// Check whether or not the message is a help message
+		page := router.helpMessages[channelID+":"+messageID]
+		if page <= 0 {
+			return
+		}
+
+		// Check which reaction was added
+		reactionName := event.Emoji.Name
+		switch reactionName {
+		case "⬅️":
+			// Update the help message
+			embed, newPage := renderDefaultGeneralHelpEmbed(router, page-1)
+			page = newPage
+			session.ChannelMessageEditEmbed(channelID, messageID, embed)
+
+			// Remove the reaction
+			session.MessageReactionRemove(channelID, messageID, reactionName, userID)
+			break
+		case "❌":
+			// Delete the help message
+			session.ChannelMessageDelete(channelID, messageID)
+			break
+		case "➡️":
+			// Update the help message
+			embed, newPage := renderDefaultGeneralHelpEmbed(router, page+1)
+			page = newPage
+			session.ChannelMessageEditEmbed(channelID, messageID, embed)
+
+			// Remove the reaction
+			session.MessageReactionRemove(channelID, messageID, reactionName, userID)
+			break
+		}
+
+		// Update the stores page
+		router.helpMessages[channelID+":"+messageID] = page
+	})
+
+	// Register the default help command
+	router.RegisterCmd(&Command{
+		Name:        "Help",
+		Description: "Lists all the available commands",
+		Usage:       "help [command name]",
+		IgnoreCase:  true,
+		Handler:     generalHelp,
+	})
 }
 
 // AddMiddleware adds a new middleware
@@ -52,6 +114,7 @@ func (router *Router) handler() func(*discordgo.Session, *discordgo.MessageCreat
 				Session:   session,
 				Event:     event,
 				Arguments: ParseArguments(""),
+				Router:    router,
 			})
 			return
 		}
@@ -96,6 +159,7 @@ func (router *Router) handler() func(*discordgo.Session, *discordgo.MessageCreat
 					Session:   session,
 					Event:     event,
 					Arguments: arguments,
+					Router:    router,
 				}
 
 				// Run all middlewares

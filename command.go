@@ -7,6 +7,7 @@ type Command struct {
 	Name        string
 	Aliases     []string
 	Description string
+	Usage       string
 	IgnoreCase  bool
 	SubCommands []*Command
 	Handler     CommandHandler
@@ -42,9 +43,11 @@ func (command *Command) trigger(ctx *Ctx) {
 
 				// Trigger the sub command
 				subCommand.trigger(&Ctx{
-					Session:   ctx.Session,
-					Event:     ctx.Event,
-					Arguments: arguments,
+					Session:       ctx.Session,
+					Event:         ctx.Event,
+					Arguments:     arguments,
+					CustomObjects: ctx.CustomObjects,
+					Router:        ctx.Router,
 				})
 				return
 			}
