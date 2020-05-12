@@ -63,7 +63,19 @@ func (router *Router) handler() func(*discordgo.Session, *discordgo.MessageCreat
 
 		// Check if the message starts with a command name
 		for _, command := range router.Commands {
+			valid := false
 			if equals(split[0], command.Name, command.IgnoreCase) {
+				valid = true
+			} else {
+				// Check if the message starts with one of the aliases
+				for _, alias := range command.Aliases {
+					if equals(split[0], alias, command.IgnoreCase) {
+						valid = true
+					}
+				}
+			}
+
+			if valid {
 				// Define the arguments for the command
 				arguments := ParseArguments("")
 				if len(split) > 1 {
@@ -76,7 +88,6 @@ func (router *Router) handler() func(*discordgo.Session, *discordgo.MessageCreat
 					Event:     event,
 					Arguments: arguments,
 				})
-				return
 			}
 		}
 	}

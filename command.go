@@ -1,8 +1,6 @@
 package dgc
 
-import (
-	"strings"
-)
+import "strings"
 
 // Command represents a simple command
 type Command struct {
@@ -20,9 +18,22 @@ type CommandHandler func(ctx *Ctx)
 // trigger triggers the given command
 func (command *Command) trigger(ctx *Ctx) {
 	// Check if the first argument matches a sub command
-	for _, argument := range ctx.Arguments.arguments {
+	if len(ctx.Arguments.arguments) > 0 {
+		argument := ctx.Arguments.Get(0)
 		for _, subCommand := range command.SubCommands {
+			valid := false
 			if equals(argument.Raw(), subCommand.Name, subCommand.IgnoreCase) {
+				valid = true
+			} else {
+				// Check if the first argument matches one of the aliases
+				for _, alias := range subCommand.Aliases {
+					if equals(argument.Raw(), alias, subCommand.IgnoreCase) {
+						valid = true
+					}
+				}
+			}
+
+			if valid {
 				// Define the arguments for the sub command
 				arguments := ParseArguments("")
 				if ctx.Arguments.Amount() > 1 {
