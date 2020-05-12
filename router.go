@@ -12,12 +12,21 @@ type Router struct {
 	IgnorePrefixCase bool
 	BotsAllowed      bool
 	Commands         []*Command
+	Middlewares      []Middleware
 	PingHandler      CommandHandler
 }
+
+// Middleware defines how a middleware looks like
+type Middleware func(*Ctx) bool
 
 // RegisterCmd registers a new command
 func (router *Router) RegisterCmd(command *Command) {
 	router.Commands = append(router.Commands, command)
+}
+
+// AddMiddleware adds a new middleware
+func (router *Router) AddMiddleware(middleware Middleware) {
+	router.Middlewares = append(router.Middlewares, middleware)
 }
 
 // Initialize initializes the message event listener
@@ -82,12 +91,22 @@ func (router *Router) handler() func(*discordgo.Session, *discordgo.MessageCreat
 					arguments = ParseArguments(strings.Join(split[1:], " "))
 				}
 
-				// Trigger the command
-				command.trigger(&Ctx{
+				// Define the context
+				ctx := &Ctx{
 					Session:   session,
 					Event:     event,
 					Arguments: arguments,
-				})
+				}
+
+				// Run all middlewares
+				for _, middleware := range router.Middlewares {
+					if !middleware(ctx) {
+						return
+					}
+				}
+
+				// Trigger the command
+				command.trigger(ctx)
 			}
 		}
 	}

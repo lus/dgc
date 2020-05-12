@@ -13,7 +13,7 @@ type Command struct {
 }
 
 // CommandHandler represents a handler for a command
-type CommandHandler func(ctx *Ctx)
+type CommandHandler func(*Ctx)
 
 // trigger triggers the given command
 func (command *Command) trigger(ctx *Ctx) {
