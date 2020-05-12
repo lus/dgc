@@ -78,8 +78,8 @@ func (router *Router) RegisterDefaultHelpCommand(session *discordgo.Session) {
 
 	// Register the default help command
 	router.RegisterCmd(&Command{
-		Name:        "Help",
-		Description: "Lists all the available commands",
+		Name:        "help",
+		Description: "Lists all the available commands or displays some information about a specific command",
 		Usage:       "help [command name]",
 		IgnoreCase:  true,
 		Handler:     generalHelp,
