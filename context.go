@@ -9,4 +9,5 @@ type Ctx struct {
 	Arguments     *Arguments
 	CustomObjects map[string]interface{}
 	Router        *Router
+	Command       *Command
 }

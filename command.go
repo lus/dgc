@@ -48,6 +48,7 @@ func (command *Command) trigger(ctx *Ctx) {
 					Arguments:     arguments,
 					CustomObjects: ctx.CustomObjects,
 					Router:        ctx.Router,
+					Command:       subCommand,
 				})
 				return
 			}

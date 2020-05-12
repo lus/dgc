@@ -164,6 +164,7 @@ func (router *Router) handler() func(*discordgo.Session, *discordgo.MessageCreat
 					Arguments:     arguments,
 					CustomObjects: map[string]interface{}{},
 					Router:        router,
+					Command:       command,
 				}
 
 				// Run all middlewares
