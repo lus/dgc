@@ -93,6 +93,9 @@ func (router *Router) AddMiddleware(middleware Middleware) {
 
 // Initialize initializes the message event listener
 func (router *Router) Initialize(session *discordgo.Session) {
+	// Initialize internal router fields
+	router.helpMessages = map[string]int{}
+
 	session.AddHandler(router.handler())
 }
 
@@ -156,10 +159,11 @@ func (router *Router) handler() func(*discordgo.Session, *discordgo.MessageCreat
 
 				// Define the context
 				ctx := &Ctx{
-					Session:   session,
-					Event:     event,
-					Arguments: arguments,
-					Router:    router,
+					Session:       session,
+					Event:         event,
+					Arguments:     arguments,
+					CustomObjects: map[string]interface{}{},
+					Router:        router,
 				}
 
 				// Run all middlewares

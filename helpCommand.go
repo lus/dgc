@@ -31,7 +31,7 @@ func generalHelp(ctx *Ctx) {
 	session.MessageReactionAdd(channelID, message.ID, "➡️")
 
 	// Define the message as a help message
-	ctx.Router.helpMessages[channelID+":"+message.ID] = 0
+	ctx.Router.helpMessages[channelID+":"+message.ID] = 1
 }
 
 // specificHelp handles the specific help
