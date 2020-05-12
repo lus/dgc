@@ -1,17 +1,23 @@
 package dgc
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"strings"
+
+	"github.com/bwmarrin/discordgo"
+)
 
 // Router represents a DiscordGo command router
 type Router struct {
-	Prefixes    []string
-	BotsAllowed bool
-	commands    []*Command
+	Prefixes         []string
+	IgnorePrefixCase bool
+	BotsAllowed      bool
+	Commands         []*Command
+	PingHandler      CommandHandler
 }
 
 // RegisterCmd registers a new command
 func (router *Router) RegisterCmd(command *Command) {
-	router.commands = append(router.commands, command)
+	router.Commands = append(router.Commands, command)
 }
 
 // Initialize initializes the message event listener
@@ -21,5 +27,57 @@ func (router *Router) Initialize(session *discordgo.Session) {
 
 // handler provides the discordgo handler for the given router
 func (router *Router) handler() func(*discordgo.Session, *discordgo.MessageCreate) {
-	// TODO: Implement command parsing
+	return func(session *discordgo.Session, event *discordgo.MessageCreate) {
+		// Define useful variables
+		message := event.Message
+		content := message.Content
+
+		// Check if the message was sent by a bot
+		if message.Author.Bot && !router.BotsAllowed {
+			return
+		}
+
+		// Execute the ping handler if the message equals the current bot's mention
+		if content == "<@!"+session.State.User.ID+">" && router.PingHandler != nil {
+			router.PingHandler(&Ctx{
+				Session:   session,
+				Event:     event,
+				Arguments: ParseArguments(""),
+			})
+			return
+		}
+
+		// Check if the message starts with one of the defined prefixes
+		hasPrefix, content := stringHasPrefix(content, router.Prefixes, router.IgnorePrefixCase)
+		if !hasPrefix {
+			return
+		}
+
+		// Check if the message is empty after the prefix processing
+		if content == "" {
+			return
+		}
+
+		// Split the processed message
+		split := strings.Split(content, " ")
+
+		// Check if the message starts with a command name
+		for _, command := range router.Commands {
+			if equals(split[0], command.Name, command.IgnoreCase) {
+				// Define the arguments for the command
+				arguments := ParseArguments("")
+				if len(split) > 1 {
+					arguments = ParseArguments(strings.Join(split[1:], " "))
+				}
+
+				// Trigger the command
+				command.trigger(&Ctx{
+					Session:   session,
+					Event:     event,
+					Arguments: arguments,
+				})
+				return
+			}
+		}
+	}
 }
