@@ -6,15 +6,15 @@ import (
 	"strings"
 )
 
-const (
+var (
 	// RegexUserMention defines the regex a user mention has to match
-	RegexUserMention = "<@!?\\d+>"
+	RegexUserMention = regexp.MustCompile("<@!?(\\d+)>")
 
 	// RegexRoleMention defines the regex a role mention has to match
-	RegexRoleMention = "<@&\\d+>"
+	RegexRoleMention = regexp.MustCompile("<@&(\\d+)>")
 
 	// RegexChannelMention defines the regex a channel mention has to match
-	RegexChannelMention = "<#\\d+>"
+	RegexChannelMention = regexp.MustCompile("<#(\\d+)>")
 )
 
 // Arguments represents the arguments that may be used in a command context
@@ -94,45 +94,38 @@ func (argument *Argument) AsInt64() (int64, error) {
 // AsUserMentionID returns the ID of the mentioned user or an empty string if it is no mention
 func (argument *Argument) AsUserMentionID() string {
 	// Check if the argument is a user mention
-	matches, err := regexp.MatchString(RegexUserMention, argument.raw)
-	if !matches || err != nil {
+	matches := RegexUserMention.MatchString(argument.raw)
+	if !matches {
 		return ""
 	}
 
 	// Parse the user ID
-	userID := argument.raw
-	userID = strings.Replace(userID, "<@", "", 1)
-	userID = strings.Replace(userID, "!", "", 1)
-	userID = strings.Replace(userID, ">", "", 1)
+	userID := RegexUserMention.FindStringSubmatch(argument.raw)[1]
 	return userID
 }
 
 // AsRoleMentionID returns the ID of the mentioned role or an empty string if it is no mention
 func (argument *Argument) AsRoleMentionID() string {
 	// Check if the argument is a role mention
-	matches, err := regexp.MatchString(RegexRoleMention, argument.raw)
-	if !matches || err != nil {
+	matches := RegexRoleMention.MatchString(argument.raw)
+	if !matches {
 		return ""
 	}
 
 	// Parse the role ID
-	roleID := argument.raw
-	roleID = strings.Replace(roleID, "<@&", "", 1)
-	roleID = strings.Replace(roleID, ">", "", 1)
+	roleID := RegexRoleMention.FindStringSubmatch(argument.raw)[1]
 	return roleID
 }
 
 // AsChannelMentionID returns the ID of the mentioned channel or an empty string if it is no mention
 func (argument *Argument) AsChannelMentionID() string {
 	// Check if the argument is a channel mention
-	matches, err := regexp.MatchString(RegexChannelMention, argument.raw)
-	if !matches || err != nil {
+	matches := RegexChannelMention.MatchString(argument.raw)
+	if !matches {
 		return ""
 	}
 
 	// Parse the channel ID
-	channelID := argument.raw
-	channelID = strings.Replace(channelID, "<#", "", 1)
-	channelID = strings.Replace(channelID, ">", "", 1)
+	channelID := RegexChannelMention.FindStringSubmatch(argument.raw)[1]
 	return channelID
 }
