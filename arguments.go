@@ -27,6 +27,9 @@ type Arguments struct {
 func ParseArguments(raw string) *Arguments {
 	// Split the raw string and parse it into an array of arguments
 	split := strings.Split(raw, " ")
+	if raw == "" {
+		split = []string{}
+	}
 	arguments := make([]*Argument, len(split))
 	for key, value := range split {
 		arguments[key] = &Argument{
