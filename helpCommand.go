@@ -118,6 +118,12 @@ func renderDefaultSpecificHelpEmbed(ctx *Ctx, command *Command) *discordgo.Messa
 		}
 	}
 
+	// Define the aliases string
+	aliases := "No aliases"
+	if len(command.Aliases) > 0 {
+		aliases = "`" + strings.Join(command.Aliases, "`, `") + "`"
+	}
+
 	// Return the embed
 	return &discordgo.MessageEmbed{
 		Type:        "rich",
@@ -133,7 +139,7 @@ func renderDefaultSpecificHelpEmbed(ctx *Ctx, command *Command) *discordgo.Messa
 			},
 			&discordgo.MessageEmbedField{
 				Name:   "Aliases",
-				Value:  "`" + strings.Join(command.Aliases, "`, `") + "`",
+				Value:  aliases,
 				Inline: false,
 			},
 			&discordgo.MessageEmbedField{
@@ -143,7 +149,7 @@ func renderDefaultSpecificHelpEmbed(ctx *Ctx, command *Command) *discordgo.Messa
 			},
 			&discordgo.MessageEmbedField{
 				Name:   "Usage",
-				Value:  "```" + command.Usage + "```",
+				Value:  "```" + prefix + command.Usage + "```",
 				Inline: false,
 			},
 		},
