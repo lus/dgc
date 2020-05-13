@@ -41,7 +41,7 @@ func main() {
         },
 
         // We can define middlewares in here, but in this example we will use the provided method (later)
-        Middlewares: []dgc.Middleware{
+        Middlewares: map[string][]dgc.Middleware{
             // ...
         },
 
@@ -71,6 +71,11 @@ func main() {
         // The correct usage of the command
         Usage: "hey",
 
+        // Commands may have flags. They will be used for middleware selection and can also be used for grouping
+        Flags: []string{
+            "greeting",
+        },
+
         // Whether or not the parser should ignore the case of our command
         IgnoreCase: true,
 
@@ -80,6 +85,9 @@ func main() {
                 Name: "world",
                 Description: "Greets the world",
                 Usage: "hey world",
+                Flags: []string{
+                    "greeting",
+                },
                 IgnoreCase: true,
                 Handler: func(ctx *dgc.Ctx) {
                     _, err := ctx.Session.ChannelMessageSend(ctx.Event.ChannelID, "Hello, world.")
@@ -100,10 +108,18 @@ func main() {
     })
 
     // Add a simple middleware that injects a custom object into the context
+    // This middleware will be executed on every command, because we wildcard it using the '*'
     // NOTE: You have to return true or false. If you return false, the command will not be executed
-    router.AddMiddleware(func(ctx *dgc.Ctx) bool {
+    router.AddMiddleware("*", func(ctx *dgc.Ctx) bool {
         // Inject a custom object into the context
         ctx.CustomObjects["myObjectName"] = "Hello, world"
+        return true
+    })
+
+    // This middleware will only be executed for commands that implement the 'greeting' flag
+    router.AddMiddleware("greeting", func(ctx *dgc.Ctx) bool {
+        // Inject a custom object into the context
+        ctx.CustomObjects["foo"] = "bar"
         return true
     })
 
