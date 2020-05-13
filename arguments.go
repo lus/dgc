@@ -388,7 +388,9 @@ func (arguments *Arguments) AsSingle() *Argument {
 func (arguments *Arguments) AsCodeblock() *Codeblock {
 	// Define the raw string
 	raw := strings.TrimSpace(arguments.raw)
-	raw = strings.TrimPrefix(raw, "\n")
+	for strings.HasPrefix(raw, "\n") {
+		raw = strings.TrimPrefix(raw, "\n")
+	}
 
 	// Check if it is a codeblock
 	matches := RegexCodeblock.MatchString(raw)
