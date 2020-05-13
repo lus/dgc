@@ -24,3 +24,19 @@ func equals(str1, str2 string, ignoreCase bool) bool {
 	}
 	return strings.ToLower(str1) == strings.ToLower(str2)
 }
+
+// stringArrayContains checks whether or not the given string array contains the given string
+func stringArrayContains(array []string, str string, ignoreCase bool) bool {
+	if ignoreCase {
+		str = strings.ToLower(str)
+	}
+	for _, value := range array {
+		if ignoreCase {
+			value = strings.ToLower(value)
+		}
+		if value == str {
+			return true
+		}
+	}
+	return false
+}
