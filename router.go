@@ -145,6 +145,8 @@ func (router *Router) handler() func(*discordgo.Session, *discordgo.MessageCreat
 		// Check if the message starts with a command name
 		for _, command := range router.Commands {
 			valid := false
+
+			// Check with the space split
 			if equals(split[0], command.Name, command.IgnoreCase) {
 				valid = true
 			} else {
@@ -152,6 +154,21 @@ func (router *Router) handler() func(*discordgo.Session, *discordgo.MessageCreat
 				for _, alias := range command.Aliases {
 					if equals(split[0], alias, command.IgnoreCase) {
 						valid = true
+					}
+				}
+			}
+
+			// Check with a newline split
+			if !valid {
+				newLineSplit := strings.Split(content, "\n")
+				if equals(newLineSplit[0], command.Name, command.IgnoreCase) {
+					valid = true
+				} else {
+					// Check if the message starts with one of the aliases
+					for _, alias := range command.Aliases {
+						if equals(newLineSplit[0], alias, command.IgnoreCase) {
+							valid = true
+						}
 					}
 				}
 			}
