@@ -11,10 +11,10 @@ func stringHasPrefix(str string, prefixes []string, ignoreCase bool) (bool, stri
 			prefix = strings.ToLower(prefix)
 		}
 		if strings.HasPrefix(stringToCheck, prefix) {
-			return true, strings.TrimSpace(string(str[len(prefix):]))
+			return true, string(str[len(prefix):])
 		}
 	}
-	return false, ""
+	return false, str
 }
 
 // equals provides a simple method to check whether or not 2 strings are equal
