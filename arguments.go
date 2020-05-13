@@ -17,7 +17,7 @@ var (
 	RegexChannelMention = regexp.MustCompile("<#(\\d+)>")
 
 	// RegexCodeblock defines the regex a codeblock has to match
-	RegexCodeblock = regexp.MustCompile("(?s)```(?:([\\w.\\-]*)\n)?(.+?)```")
+	RegexCodeblock = regexp.MustCompile("(?s)\\n+```(?:([\\w.\\-]*)\n)?(.+?)```")
 
 	// CodeblockLanguages defines which languages are valid codeblock languages
 	CodeblockLanguages = []string{
@@ -386,20 +386,14 @@ func (arguments *Arguments) AsSingle() *Argument {
 
 // AsCodeblock parses the given arguments as a codeblock
 func (arguments *Arguments) AsCodeblock() *Codeblock {
-	// Define the raw string
-	raw := strings.TrimSpace(arguments.raw)
-	for strings.HasPrefix(raw, "\n") {
-		raw = strings.TrimPrefix(raw, "\n")
-	}
-
-	// Check if it is a codeblock
-	matches := RegexCodeblock.MatchString(raw)
+	// Check if the raw string is a codeblock
+	matches := RegexCodeblock.MatchString(arguments.raw)
 	if !matches {
 		return nil
 	}
 
 	// Return the codeblock
-	submatch := RegexCodeblock.FindStringSubmatch(raw)
+	submatch := RegexCodeblock.FindStringSubmatch(arguments.raw)
 	language := ""
 	content := submatch[1] + submatch[2]
 	if submatch[1] != "" && stringArrayContains(CodeblockLanguages, submatch[1], true) {
