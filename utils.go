@@ -11,7 +11,7 @@ func stringHasPrefix(str string, prefixes []string, ignoreCase bool) (bool, stri
 			prefix = strings.ToLower(prefix)
 		}
 		if strings.HasPrefix(stringToCheck, prefix) {
-			return true, strings.TrimSpace(string(str[len(prefix)-1:]))
+			return true, strings.TrimSpace(string(str[len(prefix):]))
 		}
 	}
 	return false, ""
