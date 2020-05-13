@@ -1,6 +1,8 @@
 package dgc
 
 import (
+	"strings"
+
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -144,6 +146,11 @@ func (router *Router) handler() func(*discordgo.Session, *discordgo.MessageCreat
 			toCheck = append(toCheck, command.Aliases...)
 			hasPrefix, content = stringHasPrefix(content, toCheck, command.IgnoreCase)
 			if hasPrefix {
+				// Check if the string begins with a newline or space
+				if (content != "") && !strings.HasPrefix(content, " ") && !strings.HasPrefix(content, "\n") {
+					return
+				}
+
 				// Define the context
 				ctx := &Ctx{
 					Session:       session,

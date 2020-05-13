@@ -353,6 +353,11 @@ type Codeblock struct {
 
 // ParseArguments parses the raw string into several arguments
 func ParseArguments(raw string) *Arguments {
+	// Process the raw string
+	if strings.HasPrefix(raw, "\n") {
+		raw = strings.Replace(raw, "\n", "", 1)
+	}
+
 	// Split the raw string and parse it into an array of arguments
 	split := strings.Split(raw, " ")
 	if raw == "" {
