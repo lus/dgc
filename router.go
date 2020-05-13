@@ -1,8 +1,6 @@
 package dgc
 
 import (
-	"strings"
-
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -139,53 +137,30 @@ func (router *Router) handler() func(*discordgo.Session, *discordgo.MessageCreat
 			return
 		}
 
-		// Split the processed message
-		split := strings.Split(content, " ")
-
 		// Check if the message starts with a command name
 		for _, command := range router.Commands {
-			valid := false
-
-			// Check with the space split
-			if equals(split[0], command.Name, command.IgnoreCase) {
-				valid = true
-			} else {
-				// Check if the message starts with one of the aliases
-				for _, alias := range command.Aliases {
-					if equals(split[0], alias, command.IgnoreCase) {
-						valid = true
-					}
-				}
+			// Define an array containing the commands name and the aliases
+			toCheck := make([]string, len(command.Aliases)+1)
+			toCheck[0] = command.Name
+			for index, alias := range command.Aliases {
+				toCheck[index+1] = alias
 			}
 
-			// Check with a newline split
-			if !valid {
-				newLineSplit := strings.Split(content, "\n")
-				if equals(newLineSplit[0], command.Name, command.IgnoreCase) {
-					valid = true
-				} else {
-					// Check if the message starts with one of the aliases
-					for _, alias := range command.Aliases {
-						if equals(newLineSplit[0], alias, command.IgnoreCase) {
-							valid = true
-						}
-					}
-				}
+			// Check if the content is the current command
+			isCommand, content := stringHasPrefix(content, toCheck, command.IgnoreCase)
+			if !isCommand {
+				continue
 			}
 
-			if valid {
-				// Define the arguments for the command
-				arguments := ParseArguments("")
-				if len(split) > 1 {
-					arguments = ParseArguments(strings.Join(split[1:], " "))
-				}
-
-				// Define the context
+			// Check if the remaining string is empty or starts with a space or newline
+			isValid, content := stringHasPrefix(content, []string{" ", "\n"}, false)
+			if content == "" || isValid {
+				// Define the command context
 				ctx := &Ctx{
 					Session:       session,
 					Event:         event,
-					Arguments:     arguments,
-					CustomObjects: map[string]interface{}{},
+					Arguments:     ParseArguments(content),
+					CustomObjects: make(map[string]interface{}),
 					Router:        router,
 					Command:       command,
 				}
