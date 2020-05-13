@@ -20,7 +20,8 @@ func main() {
     }
 
     // Create a dgc router
-    router := &dgc.Router{
+    // NOTE: The dgc.Create function makes sure all internal and external maps of the struct get initialized, so you should use it in every case!
+    router := dgc.Create(&dgc.Router{
         // We will allow '!', '$' and the bot mention as command prefixes
         // NOTE: The first prefix (in our case '!') will be used as the prefix in the default help messages
         Prefixes: []string{
@@ -52,7 +53,7 @@ func main() {
                 // Error handling
             }
         },
-    }
+    })
 
     // Add a simple command
     router.RegisterCmd(&dgc.Command{
