@@ -12,13 +12,22 @@ type Router struct {
 	IgnorePrefixCase bool
 	BotsAllowed      bool
 	Commands         []*Command
-	Middlewares      []Middleware
+	Middlewares      map[string][]Middleware
 	PingHandler      CommandHandler
 	helpMessages     map[string]int
 }
 
 // Middleware defines how a middleware looks like
 type Middleware func(*Ctx) bool
+
+// Create creates a new router and makes sure that all maps get initialized
+func Create(router *Router) *Router {
+	if router.Middlewares == nil {
+		router.Middlewares = make(map[string][]Middleware)
+	}
+	router.helpMessages = make(map[string]int)
+	return router
+}
 
 // RegisterCmd registers a new command
 func (router *Router) RegisterCmd(command *Command) {
@@ -87,15 +96,12 @@ func (router *Router) RegisterDefaultHelpCommand(session *discordgo.Session) {
 }
 
 // AddMiddleware adds a new middleware
-func (router *Router) AddMiddleware(middleware Middleware) {
-	router.Middlewares = append(router.Middlewares, middleware)
+func (router *Router) AddMiddleware(flag string, middleware Middleware) {
+	router.Middlewares[flag] = append(router.Middlewares[flag], middleware)
 }
 
 // Initialize initializes the message event listener
 func (router *Router) Initialize(session *discordgo.Session) {
-	// Initialize internal router fields
-	router.helpMessages = map[string]int{}
-
 	session.AddHandler(router.handler())
 }
 
@@ -167,8 +173,8 @@ func (router *Router) handler() func(*discordgo.Session, *discordgo.MessageCreat
 					Command:       command,
 				}
 
-				// Run all middlewares
-				for _, middleware := range router.Middlewares {
+				// Run all wildcard middlewares
+				for _, middleware := range router.Middlewares["*"] {
 					if !middleware(ctx) {
 						return
 					}

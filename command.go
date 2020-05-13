@@ -8,6 +8,7 @@ type Command struct {
 	Aliases     []string
 	Description string
 	Usage       string
+	Flags       []string
 	IgnoreCase  bool
 	SubCommands []*Command
 	Handler     CommandHandler
@@ -50,6 +51,15 @@ func (command *Command) trigger(ctx *Ctx) {
 					Router:        ctx.Router,
 					Command:       subCommand,
 				})
+				return
+			}
+		}
+	}
+
+	// Run all middlewares assigned to this command
+	for _, flag := range command.Flags {
+		for _, middleware := range ctx.Router.Middlewares[flag] {
+			if !middleware(ctx) {
 				return
 			}
 		}
