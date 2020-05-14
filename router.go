@@ -2,6 +2,7 @@ package dgc
 
 import (
 	"github.com/bwmarrin/discordgo"
+	"strings"
 )
 
 // Router represents a DiscordGo command router
@@ -131,6 +132,9 @@ func (router *Router) handler() func(*discordgo.Session, *discordgo.MessageCreat
 		if !hasPrefix {
 			return
 		}
+		
+		// get rid of additional spaces (allows to use `$ command` and `@bot  command`
+		content = strings.Trim(content, " ")
 
 		// Check if the message is empty after the prefix processing
 		if content == "" {
