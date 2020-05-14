@@ -147,7 +147,7 @@ func SimpleCommandHandler(ctx *dgc.Ctx) {
 
 
     // Get the first argument
-    argument := arguments.Get(0) // will be nil if there is no argument at this index
+    argument := arguments.Get(0) // will be an argument with an emoty raw string if there is no argument at this index
 
     // Print it's raw value to the console
     fmt.Println(argument.Raw())

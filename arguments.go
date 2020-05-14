@@ -414,7 +414,9 @@ func (arguments *Arguments) Amount() int {
 // Get returns the n'th argument
 func (arguments *Arguments) Get(n int) *Argument {
 	if arguments.Amount() <= n {
-		return nil
+		return &Argument{
+			raw: "",
+		}
 	}
 	return arguments.arguments[n]
 }
