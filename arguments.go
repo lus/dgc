@@ -3,10 +3,12 @@ package dgc
 import (
 	"regexp"
 	"strconv"
-	"strings"
 )
 
 var (
+	// RegexArguments defines the regex the argument string has to match
+	RegexArguments = regexp.MustCompile("(\"[^\"]+\"|[^\\s]+)")
+
 	// RegexUserMention defines the regex a user mention has to match
 	RegexUserMention = regexp.MustCompile("<@!?(\\d+)>")
 
@@ -353,19 +355,19 @@ type Codeblock struct {
 
 // ParseArguments parses the raw string into several arguments
 func ParseArguments(raw string) *Arguments {
-	// Split the raw string and parse it into an array of arguments
-	split := strings.Split(raw, " ")
-	if raw == "" {
-		split = []string{}
-	}
-	arguments := make([]*Argument, len(split))
-	for key, value := range split {
-		arguments[key] = &Argument{
-			raw: value,
+	// Define the raw arguments
+	rawArguments := RegexArguments.FindAllString(raw, -1)
+	arguments := make([]*Argument, len(rawArguments))
+
+	// Parse the raw arguments into correct ones
+	for index, rawArgument := range rawArguments {
+		rawArgument = stringTrimPreSuffix(rawArgument, "\"")
+		arguments[index] = &Argument{
+			raw: rawArgument,
 		}
 	}
 
-	// Return the arguments
+	// Return the arguments structure
 	return &Arguments{
 		raw:       raw,
 		arguments: arguments,

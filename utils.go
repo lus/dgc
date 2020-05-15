@@ -17,6 +17,14 @@ func stringHasPrefix(str string, prefixes []string, ignoreCase bool) (bool, stri
 	return false, str
 }
 
+// stringTrimPreSuffix returns the string without the defined pre- and suffix
+func stringTrimPreSuffix(str string, preSuffix string) string {
+	if !(strings.HasPrefix(str, preSuffix) && strings.HasSuffix(str, preSuffix)) {
+		return str
+	}
+	return strings.TrimPrefix(strings.TrimSuffix(str, preSuffix), preSuffix)
+}
+
 // equals provides a simple method to check whether or not 2 strings are equal
 func equals(str1, str2 string, ignoreCase bool) bool {
 	if !ignoreCase {
