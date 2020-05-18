@@ -18,8 +18,11 @@ var (
 	// RegexChannelMention defines the regex a channel mention has to match
 	RegexChannelMention = regexp.MustCompile("<#(\\d+)>")
 
-	// RegexCodeblock defines the regex a codeblock has to match
-	RegexCodeblock = regexp.MustCompile("(?s)(\\n+)?```(?:([\\w.\\-]*)\n)?(.+?)```")
+	// RegexBigCodeblock defines the regex a big codeblock has to match
+	RegexBigCodeblock = regexp.MustCompile("(?s)\\n*```(?:([\\w.\\-]*)\\n)?(.*)```")
+
+	// RegexSmallCodeblock defines the regex a small codeblock has to match
+	RegexSmallCodeblock = regexp.MustCompile("(?s)\\n*`(.*)`")
 
 	// CodeblockLanguages defines which languages are valid codeblock languages
 	CodeblockLanguages = []string{
@@ -388,20 +391,32 @@ func (arguments *Arguments) AsSingle() *Argument {
 
 // AsCodeblock parses the given arguments as a codeblock
 func (arguments *Arguments) AsCodeblock() *Codeblock {
-	// Check if the raw string is a codeblock
-	matches := RegexCodeblock.MatchString(arguments.raw)
+	raw := arguments.Raw()
+
+	// Check if the raw string is a big codeblock
+	matches := RegexBigCodeblock.MatchString(raw)
 	if !matches {
-		return nil
+		// Check if the raw string is a small codeblock
+		matches = RegexSmallCodeblock.MatchString(raw)
+		if matches {
+			submatches := RegexSmallCodeblock.FindStringSubmatch(raw)
+			return &Codeblock{
+				Language: "",
+				Content:  submatches[1],
+			}
+		}
+	}
+
+	// Define the content and the language
+	submatches := RegexBigCodeblock.FindStringSubmatch(raw)
+	language := ""
+	content := submatches[1] + submatches[2]
+	if submatches[1] != "" && !stringArrayContains(CodeblockLanguages, submatches[1], false) {
+		language = submatches[1]
+		content = submatches[2]
 	}
 
 	// Return the codeblock
-	submatch := RegexCodeblock.FindStringSubmatch(arguments.raw)
-	language := ""
-	content := submatch[2] + submatch[3]
-	if submatch[2] != "" && stringArrayContains(CodeblockLanguages, submatch[2], true) {
-		language = submatch[2]
-		content = submatch[3]
-	}
 	return &Codeblock{
 		Language: language,
 		Content:  content,
