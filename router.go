@@ -100,6 +100,7 @@ func (router *Router) RegisterDefaultHelpCommand(session *discordgo.Session) {
 		Name:        "help",
 		Description: "Lists all the available commands or displays some information about a specific command",
 		Usage:       "help [command name]",
+		Example:     "help yourCommand",
 		IgnoreCase:  true,
 		Handler:     generalHelp,
 	})
