@@ -405,6 +405,7 @@ func (arguments *Arguments) AsCodeblock() *Codeblock {
 				Content:  submatches[1],
 			}
 		}
+		return nil
 	}
 
 	// Define the content and the language
