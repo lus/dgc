@@ -34,6 +34,6 @@ func (rateLimiter *RateLimiter) NotifyExecution(ctx *Ctx) bool {
 		}
 		return false
 	}
-	rateLimiter.executions.Set(ctx.Event.Author.ID, time.Now().UnixNano()/1e6, rateLimiter.Cooldown, nil)
+	rateLimiter.executions.Set(ctx.Event.Author.ID, time.Now().UnixNano()/1e6, rateLimiter.Cooldown)
 	return true
 }
