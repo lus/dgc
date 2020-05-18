@@ -177,7 +177,7 @@ func (router *Router) handler() func(*discordgo.Session, *discordgo.MessageCreat
 					Session:       session,
 					Event:         event,
 					Arguments:     ParseArguments(content),
-					CustomObjects: make(map[string]interface{}),
+					CustomObjects: newObjectsMap(),
 					Router:        router,
 					Command:       command,
 				}

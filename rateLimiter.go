@@ -28,7 +28,7 @@ func (rateLimiter *RateLimiter) NotifyExecution(ctx *Ctx) bool {
 		if rateLimiter.RateLimitedHandler != nil {
 			nextExecution, err := rateLimiter.executions.GetExpires(ctx.Event.Author.ID)
 			if err != nil {
-				ctx.CustomObjects["dgc_nextExecution"] = nextExecution
+				ctx.CustomObjects.Set("dgc_nextExecution", nextExecution)
 			}
 			rateLimiter.RateLimitedHandler(ctx)
 		}
