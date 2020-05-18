@@ -72,6 +72,9 @@ func main() {
         // The correct usage of the command
         Usage: "hey",
 
+        // An example how to use the command
+        Example: "hey",
+
         // Commands may have flags. They will be used for middleware selection and can also be used for grouping
         Flags: []string{
             "greeting",
@@ -86,6 +89,7 @@ func main() {
                 Name: "world",
                 Description: "Greets the world",
                 Usage: "hey world",
+                Example: "greet world",
                 Flags: []string{
                     "greeting",
                 },
@@ -98,6 +102,17 @@ func main() {
                 },
             },
         },
+
+        // dgc supports rate limiting. You can define a rate limiter here.
+        RateLimiter: dgc.NewRateLimiter(5*time.Second, func (ctx *Ctx) {
+            _, err := ctx.Sesion.ChannelMessageSend(ctx.Event.ChannelID, "You are being rate limited!")
+            if err != nil {
+                // Error handling
+            }
+
+            // HINT: You can get the timestamp when the next execution is allowed like this:
+            nextExecution := ctx.CustomObjects["dgc_nextExecution"].(time.Time)
+        }),
 
         // The handler of the command
         Handler: func(ctx *dgc.Ctx) {

@@ -53,7 +53,7 @@ func (command *Command) trigger(ctx *Ctx) {
 	}
 
 	// Check if the user is being rate limited
-	if !command.RateLimiter.NotifyExecution(ctx) {
+	if command.RateLimiter != nil && !command.RateLimiter.NotifyExecution(ctx) {
 		return
 	}
 
