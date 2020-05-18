@@ -34,6 +34,16 @@ func (router *Router) RegisterCmd(command *Command) {
 	router.Commands = append(router.Commands, command)
 }
 
+// GetCmd returns the command with the given name if it exists
+func (router *Router) GetCmd(name string) *Command {
+	for _, command := range router.Commands {
+		if command.Name == name || stringArrayContains(command.Aliases, name, command.IgnoreCase) {
+			return command
+		}
+	}
+	return nil
+}
+
 // RegisterDefaultHelpCommand registers the default help command
 func (router *Router) RegisterDefaultHelpCommand(session *discordgo.Session) {
 	// Initialize the reaction add listener

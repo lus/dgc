@@ -18,6 +18,16 @@ type Command struct {
 // CommandHandler represents a handler for a command
 type CommandHandler func(*Ctx)
 
+// GetSubCmd returns the sub command with the given name if it exists
+func (command *Command) GetSubCmd(name string) *Command {
+	for _, subCommand := range command.SubCommands {
+		if subCommand.Name == name || stringArrayContains(subCommand.Aliases, name, subCommand.IgnoreCase) {
+			return subCommand
+		}
+	}
+	return nil
+}
+
 // trigger triggers the given command
 func (command *Command) trigger(ctx *Ctx) {
 	// Check if the first argument matches a sub command
