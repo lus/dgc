@@ -118,6 +118,16 @@ func renderDefaultSpecificHelpEmbed(ctx *Ctx, command *Command) *discordgo.Messa
 		}
 	}
 
+	// Define the sub commands string
+	subCommands := "No sub commands"
+	if len(command.SubCommands) > 0 {
+		subCommandNames := make([]string, len(command.SubCommands))
+		for index, subCommand := range command.SubCommands {
+			subCommandNames[index] = subCommand.Name
+		}
+		subCommands = "`" + strings.Join(subCommandNames, "`, `") + "`"
+	}
+
 	// Define the aliases string
 	aliases := "No aliases"
 	if len(command.Aliases) > 0 {
@@ -138,6 +148,11 @@ func renderDefaultSpecificHelpEmbed(ctx *Ctx, command *Command) *discordgo.Messa
 				Inline: false,
 			},
 			&discordgo.MessageEmbedField{
+				Name:   "Sub Commands",
+				Value:  subCommands,
+				Inline: false,
+			},
+			&discordgo.MessageEmbedField{
 				Name:   "Aliases",
 				Value:  aliases,
 				Inline: false,
@@ -150,6 +165,11 @@ func renderDefaultSpecificHelpEmbed(ctx *Ctx, command *Command) *discordgo.Messa
 			&discordgo.MessageEmbedField{
 				Name:   "Usage",
 				Value:  "```" + prefix + command.Usage + "```",
+				Inline: false,
+			},
+			&discordgo.MessageEmbedField{
+				Name:   "Example",
+				Value:  "```" + prefix + command.Example + "```",
 				Inline: false,
 			},
 		},

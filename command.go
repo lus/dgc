@@ -8,6 +8,7 @@ type Command struct {
 	Aliases     []string
 	Description string
 	Usage       string
+	Example     string
 	Flags       []string
 	IgnoreCase  bool
 	SubCommands []*Command
