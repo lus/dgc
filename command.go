@@ -12,11 +12,9 @@ type Command struct {
 	Flags       []string
 	IgnoreCase  bool
 	SubCommands []*Command
-	Handler     CommandHandler
+	RateLimiter *RateLimiter
+	Handler     ExecutionHandler
 }
-
-// CommandHandler represents a handler for a command
-type CommandHandler func(*Ctx)
 
 // GetSubCmd returns the sub command with the given name if it exists
 func (command *Command) GetSubCmd(name string) *Command {
@@ -52,6 +50,11 @@ func (command *Command) trigger(ctx *Ctx) {
 			})
 			return
 		}
+	}
+
+	// Check if the user is being rate limited
+	if !command.RateLimiter.NotifyExecution(ctx) {
+		return
 	}
 
 	// Run all middlewares assigned to this command

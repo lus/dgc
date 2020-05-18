@@ -13,7 +13,7 @@ type Router struct {
 	BotsAllowed      bool
 	Commands         []*Command
 	Middlewares      map[string][]Middleware
-	PingHandler      CommandHandler
+	PingHandler      ExecutionHandler
 	helpMessages     map[string]int
 }
 

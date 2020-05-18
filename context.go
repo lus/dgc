@@ -11,3 +11,6 @@ type Ctx struct {
 	Router        *Router
 	Command       *Command
 }
+
+// ExecutionHandler represents a handler for a context execution
+type ExecutionHandler func(*Ctx)
