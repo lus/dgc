@@ -140,7 +140,7 @@ func main() {
     })
 
     // Enable the default help command
-    router.RegisterDefaultHelpCommand(session)
+    router.RegisterDefaultHelpCommand(session, nil)
 
     // Initialize the router to make it functional
     router.Initialize(session)
