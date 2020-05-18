@@ -46,3 +46,11 @@ func (om *ObjectsMap) Set(key string, val interface{}) {
 
 	om.m[key] = val
 }
+
+// Delete removes a key-value pair from the map.
+func (om *ObjectsMap) Delete(key string) {
+	om.mtx.Lock()
+	defer om.mtx.Unlock()
+
+	delete(om.m, key)
+}
