@@ -104,7 +104,7 @@ func main() {
         },
 
         // dgc supports rate limiting. You can define a rate limiter here.
-        RateLimiter: dgc.NewRateLimiter(5*time.Second, func (ctx *Ctx) {
+        RateLimiter: dgc.NewRateLimiter(5*time.Second, 2*time.Second, func (ctx *Ctx) {
             _, err := ctx.Sesion.ChannelMessageSend(ctx.Event.ChannelID, "You are being rate limited!")
             if err != nil {
                 // Error handling

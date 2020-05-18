@@ -14,11 +14,11 @@ type RateLimiter struct {
 }
 
 // NewRateLimiter creates a new rate limiter
-func NewRateLimiter(cooldown time.Duration, onRateLimited ExecutionHandler) *RateLimiter {
+func NewRateLimiter(cooldown, cleanupInterval time.Duration, onRateLimited ExecutionHandler) *RateLimiter {
 	return &RateLimiter{
 		Cooldown:           cooldown,
 		RateLimitedHandler: onRateLimited,
-		executions:         timedmap.New(cooldown / 2),
+		executions:         timedmap.New(cleanupInterval),
 	}
 }
 
