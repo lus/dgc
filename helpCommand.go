@@ -36,16 +36,17 @@ func generalHelp(ctx *Ctx) {
 
 // specificHelp handles the specific help
 func specificHelp(ctx *Ctx) {
-	// Define the command name
-	commandName := ctx.Arguments.Get(0).Raw()
+	// Define the command names
+	commandNames := strings.Split(ctx.Arguments.Raw(), " ")
 
 	// Define the command
 	var command *Command
-	for _, cmd := range ctx.Router.Commands {
-		if equals(commandName, cmd.Name, cmd.IgnoreCase) {
-			command = cmd
-			break
+	for index, commandName := range commandNames {
+		if index == 0 {
+			command = ctx.Router.GetCmd(commandName)
+			continue
 		}
+		command = command.GetSubCmd(commandName)
 	}
 
 	// Send the help embed
