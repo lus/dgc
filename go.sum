@@ -4,5 +4,7 @@ github.com/gorilla/websocket v1.4.0 h1:WDFjx/TMzVgy9VdMMQi2K2Emtwi2QcUQsztZ/zLaH
 github.com/gorilla/websocket v1.4.0/go.mod h1:E7qHFY5m1UJ88s3WnNqhKjPHQ0heANvMoAMk2YaljkQ=
 github.com/zekroTJA/timedmap v0.0.0-20200421070859-4302645f33f5 h1:LoUppaRvaFRGh8/hF7848Hl5g9FcddkP8cVPJJ0y0fQ=
 github.com/zekroTJA/timedmap v0.0.0-20200421070859-4302645f33f5/go.mod h1:ktlw5aYhoXQvOvWFL9SzltGXn1bQgJXxZzHJK4wQvsI=
+github.com/zekroTJA/timedmap v0.0.0-20200518230343-de9b879d109a h1:S8UfZYz3TbkwO8bZ1UE3miiEjh/KSi4tZYwX1A/omC4=
+github.com/zekroTJA/timedmap v0.0.0-20200518230343-de9b879d109a/go.mod h1:ktlw5aYhoXQvOvWFL9SzltGXn1bQgJXxZzHJK4wQvsI=
 golang.org/x/crypto v0.0.0-20181030102418-4d3f4d9ffa16 h1:y6ce7gCWtnH+m3dCjzQ1PCuwl28DDIc3VNnvY29DlIA=
 golang.org/x/crypto v0.0.0-20181030102418-4d3f4d9ffa16/go.mod h1:6SG95UA2DQfeDnfUPMdvaQW0Q7yPrPDi9nlGo2tz2b4=

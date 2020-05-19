@@ -110,7 +110,7 @@ func renderDefaultSpecificHelpEmbed(ctx *Ctx, command *Command) *discordgo.Messa
 			Timestamp: time.Now().Format(time.RFC3339),
 			Color:     0xff0000,
 			Fields: []*discordgo.MessageEmbedField{
-				&discordgo.MessageEmbedField{
+				{
 					Name:   "Message",
 					Value:  "```The given command doesn't exist. Type `" + prefix + "help` for a list of available commands.```",
 					Inline: false,
@@ -143,32 +143,32 @@ func renderDefaultSpecificHelpEmbed(ctx *Ctx, command *Command) *discordgo.Messa
 		Timestamp:   time.Now().Format(time.RFC3339),
 		Color:       0xffff00,
 		Fields: []*discordgo.MessageEmbedField{
-			&discordgo.MessageEmbedField{
+			{
 				Name:   "Name",
 				Value:  "`" + command.Name + "`",
 				Inline: false,
 			},
-			&discordgo.MessageEmbedField{
+			{
 				Name:   "Sub Commands",
 				Value:  subCommands,
 				Inline: false,
 			},
-			&discordgo.MessageEmbedField{
+			{
 				Name:   "Aliases",
 				Value:  aliases,
 				Inline: false,
 			},
-			&discordgo.MessageEmbedField{
+			{
 				Name:   "Description",
 				Value:  "```" + command.Description + "```",
 				Inline: false,
 			},
-			&discordgo.MessageEmbedField{
+			{
 				Name:   "Usage",
 				Value:  "```" + prefix + command.Usage + "```",
 				Inline: false,
 			},
-			&discordgo.MessageEmbedField{
+			{
 				Name:   "Example",
 				Value:  "```" + prefix + command.Example + "```",
 				Inline: false,

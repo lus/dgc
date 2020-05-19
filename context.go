@@ -7,7 +7,7 @@ type Ctx struct {
 	Session       *discordgo.Session
 	Event         *discordgo.MessageCreate
 	Arguments     *Arguments
-	CustomObjects map[string]interface{}
+	CustomObjects *ObjectsMap
 	Router        *Router
 	Command       *Command
 }
