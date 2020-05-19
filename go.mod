@@ -4,5 +4,5 @@ go 1.14
 
 require (
 	github.com/bwmarrin/discordgo v0.20.3
-	github.com/zekroTJA/timedmap v0.0.0-20200421070859-4302645f33f5
+	github.com/zekroTJA/timedmap v0.0.0-20200518230343-de9b879d109a
 )
