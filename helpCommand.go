@@ -92,7 +92,7 @@ func renderDefaultGeneralHelpEmbed(router *Router, page int) (*discordgo.Message
 		Title:       "Command List (Page " + strconv.Itoa(page) + "/" + strconv.Itoa(pageAmount) + ")",
 		Description: "These are all the available commands. Type `" + prefix + "help <command name>` to find out more about a specific command.",
 		Timestamp:   time.Now().Format(time.RFC3339),
-		Color:       0xffff00,
+		Color:       helpColor,
 		Fields:      fields,
 	}, page
 }
@@ -141,7 +141,7 @@ func renderDefaultSpecificHelpEmbed(ctx *Ctx, command *Command) *discordgo.Messa
 		Title:       "Command Information",
 		Description: "Displaying the information for the `" + command.Name + "` command.",
 		Timestamp:   time.Now().Format(time.RFC3339),
-		Color:       0xffff00,
+		Color:       helpColor,
 		Fields: []*discordgo.MessageEmbedField{
 			{
 				Name:   "Name",
@@ -176,3 +176,4 @@ func renderDefaultSpecificHelpEmbed(ctx *Ctx, command *Command) *discordgo.Messa
 		},
 	}
 }
+

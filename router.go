@@ -44,8 +44,17 @@ func (router *Router) GetCmd(name string) *Command {
 	return nil
 }
 
+var helpColor int
+
 // RegisterDefaultHelpCommand registers the default help command
-func (router *Router) RegisterDefaultHelpCommand(session *discordgo.Session, rateLimiter *RateLimiter) {
+// If Color is smaller 0 or bigger 0xffffff, 0xffff00 is used
+func (router *Router) RegisterDefaultHelpCommand(session *discordgo.Session, rateLimiter *RateLimiter, color int) {
+	if color < 0 || color > 0xffffff {
+		helpColor = 0xffff00
+	} else {
+		helpColor = color
+	}
+
 	// Initialize the reaction add listener
 	session.AddHandler(func(session *discordgo.Session, event *discordgo.MessageReactionAdd) {
 		// Define useful variables
@@ -195,3 +204,4 @@ func (router *Router) handler() func(*discordgo.Session, *discordgo.MessageCreat
 		}
 	}
 }
+
