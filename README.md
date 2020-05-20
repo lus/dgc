@@ -111,7 +111,7 @@ func main() {
             }
 
             // HINT: You can get the timestamp when the next execution is allowed like this:
-            nextExecution := ctx.CustomObjects["dgc_nextExecution"].(time.Time)
+            nextExecution := ctx.CustomObjects.MustGet("dgc_nextExecution").(time.Time)
         }),
 
         // The handler of the command
