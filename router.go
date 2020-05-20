@@ -130,7 +130,7 @@ func (router *Router) handler() func(*discordgo.Session, *discordgo.MessageCreat
 		}
 
 		// Execute the ping handler if the message equals the current bot's mention
-		if content == "<@!"+session.State.User.ID+">" && router.PingHandler != nil {
+		if (content == "<@!"+session.State.User.ID+">" || content == "<@"+session.State.User.ID+">") && router.PingHandler != nil {
 			router.PingHandler(&Ctx{
 				Session:   session,
 				Event:     event,

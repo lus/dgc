@@ -128,14 +128,14 @@ func main() {
     // NOTE: You have to return true or false. If you return false, the command will not be executed
     router.AddMiddleware("*", func(ctx *dgc.Ctx) bool {
         // Inject a custom object into the context
-        ctx.CustomObjects["myObjectName"] = "Hello, world"
+        ctx.CustomObjects.Set("myObjectName", "Hello, world")
         return true
     })
 
     // This middleware will only be executed for commands that implement the 'greeting' flag
     router.AddMiddleware("greeting", func(ctx *dgc.Ctx) bool {
         // Inject a custom object into the context
-        ctx.CustomObjects["foo"] = "bar"
+        ctx.CustomObjects.Set("foo", "bar")
         return true
     })
 
