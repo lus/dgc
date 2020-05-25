@@ -12,7 +12,7 @@ type Command struct {
 	Flags       []string
 	IgnoreCase  bool
 	SubCommands []*Command
-	RateLimiter *RateLimiter
+	RateLimiter RateLimiter
 	Handler     ExecutionHandler
 }
 

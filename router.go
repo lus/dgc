@@ -45,7 +45,7 @@ func (router *Router) GetCmd(name string) *Command {
 }
 
 // RegisterDefaultHelpCommand registers the default help command
-func (router *Router) RegisterDefaultHelpCommand(session *discordgo.Session, rateLimiter *RateLimiter) {
+func (router *Router) RegisterDefaultHelpCommand(session *discordgo.Session, rateLimiter RateLimiter) {
 	// Initialize the reaction add listener
 	session.AddHandler(func(session *discordgo.Session, event *discordgo.MessageReactionAdd) {
 		// Define useful variables
