@@ -3,6 +3,7 @@ package dgc
 import (
 	"regexp"
 	"strconv"
+	"time"
 )
 
 var (
@@ -501,4 +502,9 @@ func (argument *Argument) AsChannelMentionID() string {
 	// Parse the channel ID
 	channelID := RegexChannelMention.FindStringSubmatch(argument.raw)[1]
 	return channelID
+}
+
+// AsDuration parses the given argument into a duration
+func (argument *Argument) AsDuration() (time.Duration, error) {
+	return time.ParseDuration(argument.raw)
 }
