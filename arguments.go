@@ -3,6 +3,7 @@ package dgc
 import (
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -414,6 +415,13 @@ func (arguments *Arguments) Remove(n int) {
 
 	// Set the new argument slice
 	arguments.arguments = append(arguments.arguments[:n], arguments.arguments[n+1:]...)
+
+	// Set the new raw string
+	raw := ""
+	for _, argument := range arguments.arguments {
+		raw += argument.raw + " "
+	}
+	arguments.raw = strings.TrimSpace(raw)
 }
 
 // AsCodeblock parses the given arguments as a codeblock
