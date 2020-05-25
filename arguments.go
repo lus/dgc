@@ -390,6 +390,48 @@ func (arguments *Arguments) AsSingle() *Argument {
 	}
 }
 
+// Amount returns the amount of given arguments
+func (arguments *Arguments) Amount() int {
+	return len(arguments.arguments)
+}
+
+// Get returns the n'th argument
+func (arguments *Arguments) Get(n int) *Argument {
+	if arguments.Amount() <= n {
+		return &Argument{
+			raw: "",
+		}
+	}
+	return arguments.arguments[n]
+}
+
+// Remove removes the n'th argument
+func (arguments *Arguments) Remove(n int) {
+	// Define the current arguments
+	currentArguments := arguments.arguments
+
+	// Check if the given index is valid
+	if arguments.Amount() <= n {
+		return
+	}
+
+	// Make a new argument slice
+	newArguments := make([]*Argument, len(currentArguments)-1)
+
+	// Copy the necessary arguments into the new slice
+	counter := 0
+	for index, argument := range currentArguments {
+		if index == n {
+			continue
+		}
+		newArguments[counter] = argument
+		counter++
+	}
+
+	// Set the new argument slice
+	arguments.arguments = newArguments
+}
+
 // AsCodeblock parses the given arguments as a codeblock
 func (arguments *Arguments) AsCodeblock() *Codeblock {
 	raw := arguments.Raw()
@@ -423,21 +465,6 @@ func (arguments *Arguments) AsCodeblock() *Codeblock {
 		Language: language,
 		Content:  content,
 	}
-}
-
-// Amount returns the amount of given arguments
-func (arguments *Arguments) Amount() int {
-	return len(arguments.arguments)
-}
-
-// Get returns the n'th argument
-func (arguments *Arguments) Get(n int) *Argument {
-	if arguments.Amount() <= n {
-		return &Argument{
-			raw: "",
-		}
-	}
-	return arguments.arguments[n]
 }
 
 // Argument represents a single argument
