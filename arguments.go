@@ -407,29 +407,13 @@ func (arguments *Arguments) Get(n int) *Argument {
 
 // Remove removes the n'th argument
 func (arguments *Arguments) Remove(n int) {
-	// Define the current arguments
-	currentArguments := arguments.arguments
-
 	// Check if the given index is valid
 	if arguments.Amount() <= n {
 		return
 	}
 
-	// Make a new argument slice
-	newArguments := make([]*Argument, len(currentArguments)-1)
-
-	// Copy the necessary arguments into the new slice
-	counter := 0
-	for index, argument := range currentArguments {
-		if index == n {
-			continue
-		}
-		newArguments[counter] = argument
-		counter++
-	}
-
 	// Set the new argument slice
-	arguments.arguments = newArguments
+	arguments.arguments = append(arguments.arguments[:n], arguments.arguments[n+1:]...)
 }
 
 // AsCodeblock parses the given arguments as a codeblock
