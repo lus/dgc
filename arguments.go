@@ -5,6 +5,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/karrick/tparse/v2"
 )
 
 var (
@@ -525,5 +527,5 @@ func (argument *Argument) AsChannelMentionID() string {
 
 // AsDuration parses the given argument into a duration
 func (argument *Argument) AsDuration() (time.Duration, error) {
-	return time.ParseDuration(argument.raw)
+	return tparse.AbsoluteDuration(time.Now(), argument.raw)
 }
