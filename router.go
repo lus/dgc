@@ -13,6 +13,13 @@ type Router struct {
 	BotsAllowed      bool
 	Commands         []*Command
 	PingHandler      ExecutionHandler
+	Storage          map[string]*ObjectsMap
+}
+
+// Create makes sure all maps get initialized
+func Create(router *Router) *Router {
+	router.Storage = make(map[string]*ObjectsMap)
+	return router
 }
 
 // RegisterCmd registers a new command
@@ -28,6 +35,11 @@ func (router *Router) GetCmd(name string) *Command {
 		}
 	}
 	return nil
+}
+
+// InitializeStorage initializes a storage map
+func (router *Router) InitializeStorage(name string) {
+	router.Storage[name] = newObjectsMap()
 }
 
 // Initialize initializes the message event listener
