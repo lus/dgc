@@ -57,15 +57,6 @@ func (command *Command) trigger(ctx *Ctx) {
 		return
 	}
 
-	// Run all middlewares assigned to this command
-	for _, flag := range command.Flags {
-		for _, middleware := range ctx.Router.Middlewares[flag] {
-			if !middleware(ctx) {
-				return
-			}
-		}
-	}
-
 	// Handle this command if the first argument matched no sub command
 	command.Handler(ctx)
 }
