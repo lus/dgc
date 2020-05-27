@@ -52,11 +52,18 @@ func (command *Command) trigger(ctx *Ctx) {
 		}
 	}
 
-	// Check if the user is being rate limited
-	if command.RateLimiter != nil && !command.RateLimiter.NotifyExecution(ctx) {
-		return
+	// Prepare all middlewares
+	nextHandler := func(ctx *Ctx) {
+		// Check if the user is being rate limited
+		if command.RateLimiter != nil && !command.RateLimiter.NotifyExecution(ctx) {
+			return
+		}
+		command.Handler(ctx)
+	}
+	for _, middleware := range ctx.Router.Middlewares {
+		nextHandler = middleware(nextHandler)
 	}
 
-	// Handle this command if the first argument matched no sub command
-	command.Handler(ctx)
+	// Run all middlewares
+	nextHandler(ctx)
 }

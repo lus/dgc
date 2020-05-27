@@ -12,6 +12,7 @@ type Router struct {
 	IgnorePrefixCase bool
 	BotsAllowed      bool
 	Commands         []*Command
+	Middlewares      []Middleware
 	PingHandler      ExecutionHandler
 	Storage          map[string]*ObjectsMap
 }
@@ -35,6 +36,11 @@ func (router *Router) GetCmd(name string) *Command {
 		}
 	}
 	return nil
+}
+
+// RegisterMiddleware registers a new middleware
+func (router *Router) RegisterMiddleware(middleware Middleware) {
+	router.Middlewares = append(router.Middlewares, middleware)
 }
 
 // InitializeStorage initializes a storage map
