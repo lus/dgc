@@ -26,6 +26,14 @@ func (command *Command) GetSubCmd(name string) *Command {
 	return nil
 }
 
+// NotifyRateLimiter notifies the rate limiter about a new execution and returns false if the user is being rate limited
+func (command *Command) NotifyRateLimiter(ctx *Ctx) bool {
+	if command.RateLimiter == nil {
+		return true
+	}
+	return command.RateLimiter.NotifyExecution(ctx)
+}
+
 // trigger triggers the given command
 func (command *Command) trigger(ctx *Ctx) {
 	// Check if the first argument matches a sub command
