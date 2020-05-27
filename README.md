@@ -1,3 +1,5 @@
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white)](https://pkg.go.dev/github.com/Lukaesebrot/dgc)
+
 # dgc
 A DiscordGo command router with tons of useful features
 
