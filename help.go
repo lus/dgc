@@ -27,7 +27,11 @@ func (router *Router) RegisterDefaultHelpCommand(session *discordgo.Session, rat
 		}
 
 		// Check whether or not the message is a help message
-		page := router.Storage["dgc_helpMessages"].MustGet(channelID + ":" + messageID).(int)
+		rawPage, ok := router.Storage["dgc_helpMessages"].Get(channelID + ":" + messageID)
+		if !ok {
+			return
+		}
+		page := rawPage.(int)
 		if page <= 0 {
 			return
 		}
