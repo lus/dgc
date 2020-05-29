@@ -2,7 +2,6 @@
 
 # dgc
 A DiscordGo command router with tons of useful features
-
 If you find any bugs or if you have a feature request, please tell me using an issue.
 
 
