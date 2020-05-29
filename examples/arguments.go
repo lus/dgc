@@ -46,7 +46,7 @@ func someCommandHandler(ctx *dgc.Ctx) {
 	}
 	fmt.Println("Bool:", boolean)
 
-	// Parse it into a user ID if it is a user mention
+	// Parse it into a user ID if it is an user mention
 	// HINT: You can also use the argument.AsRoleMentionID and argument.AsChannelMentionID methods
 	userID := argument.AsUserMentionID()
 	if userID == "" {
