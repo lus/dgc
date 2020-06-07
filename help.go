@@ -27,7 +27,7 @@ func (router *Router) RegisterDefaultHelpCommand(session *discordgo.Session, rat
 		}
 
 		// Check whether or not the message is a help message
-		rawPage, ok := router.Storage["dgc_helpMessages"].Get(channelID + ":" + messageID)
+		rawPage, ok := router.Storage["dgc_helpMessages"].Get(channelID + ":" + messageID + ":" + event.UserID)
 		if !ok {
 			return
 		}
@@ -64,7 +64,7 @@ func (router *Router) RegisterDefaultHelpCommand(session *discordgo.Session, rat
 		}
 
 		// Update the stores page
-		router.Storage["dgc_helpMessages"].Set(channelID+":"+messageID, page)
+		router.Storage["dgc_helpMessages"].Set(channelID+":"+messageID+":"+event.UserID, page)
 	})
 
 	// Register the default help command
@@ -101,7 +101,7 @@ func generalHelpCommand(ctx *Ctx) {
 	session.MessageReactionAdd(channelID, message.ID, "➡️")
 
 	// Define the message as a help message
-	ctx.Router.Storage["dgc_helpMessages"].Set(channelID+":"+message.ID, 1)
+	ctx.Router.Storage["dgc_helpMessages"].Set(channelID+":"+message.ID+":"+ctx.Event.Author.ID, 1)
 }
 
 // specificHelpCommand handles the specific help command
