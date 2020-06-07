@@ -31,7 +31,7 @@ func (router *Router) RegisterCmd(command *Command) {
 // GetCmd returns the command with the given name if it exists
 func (router *Router) GetCmd(name string) *Command {
 	for _, command := range router.Commands {
-		if command.Name == name || stringArrayContains(command.Aliases, name, command.IgnoreCase) {
+		if equals(command.Name, name, command.IgnoreCase) || stringArrayContains(command.Aliases, name, command.IgnoreCase) {
 			return command
 		}
 	}

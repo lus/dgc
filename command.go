@@ -19,7 +19,7 @@ type Command struct {
 // GetSubCmd returns the sub command with the given name if it exists
 func (command *Command) GetSubCmd(name string) *Command {
 	for _, subCommand := range command.SubCommands {
-		if subCommand.Name == name || stringArrayContains(subCommand.Aliases, name, subCommand.IgnoreCase) {
+		if equals(subCommand.Name, name, subCommand.IgnoreCase) || stringArrayContains(subCommand.Aliases, name, subCommand.IgnoreCase) {
 			return subCommand
 		}
 	}
