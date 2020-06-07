@@ -94,10 +94,10 @@ func (router *Router) Handler() func(*discordgo.Session, *discordgo.MessageCreat
 		for _, command := range router.Commands {
 			// Define an array containing the commands name and the aliases
 			toCheck := make([]string, len(command.Aliases)+1)
-			toCheck[0] = command.Name
-			for index, alias := range command.Aliases {
-				toCheck[index+1] = alias
+			for _, alias := range command.Aliases {
+				toCheck = append(toCheck, alias)
 			}
+			toCheck = append(toCheck, command.Name)
 
 			// Check if the content is the current command
 			isCommand, content := stringHasPrefix(content, toCheck, command.IgnoreCase)
