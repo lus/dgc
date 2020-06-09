@@ -1,6 +1,9 @@
 package dgc
 
-import "strings"
+import (
+	"sort"
+	"strings"
+)
 
 // Command represents a simple command
 type Command struct {
@@ -18,8 +21,23 @@ type Command struct {
 
 // GetSubCmd returns the sub command with the given name if it exists
 func (command *Command) GetSubCmd(name string) *Command {
+	// Sort the sub commands slice using the length of the command name
+	sort.Slice(command.SubCommands, func(i, j int) bool {
+		return len(command.SubCommands[i].Name) > len(command.SubCommands[j].Name)
+	})
+
+	// Loop through all commands to find the correct one
 	for _, subCommand := range command.SubCommands {
-		if equals(subCommand.Name, name, subCommand.IgnoreCase) || stringArrayContains(subCommand.Aliases, name, subCommand.IgnoreCase) {
+		// Define the slice to check
+		toCheck := make([]string, len(subCommand.Aliases)+1)
+		toCheck = append(toCheck, subCommand.Name)
+		toCheck = append(toCheck, subCommand.Aliases...)
+		sort.Slice(toCheck, func(i, j int) bool {
+			return len(toCheck[i]) > len(toCheck[j])
+		})
+
+		// Check the prefix of the string
+		if stringArrayContains(toCheck, name, subCommand.IgnoreCase) {
 			return subCommand
 		}
 	}

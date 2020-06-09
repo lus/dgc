@@ -1,6 +1,7 @@
 package dgc
 
 import (
+	"sort"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -30,8 +31,23 @@ func (router *Router) RegisterCmd(command *Command) {
 
 // GetCmd returns the command with the given name if it exists
 func (router *Router) GetCmd(name string) *Command {
+	// Sort the commands slice using the length of the command name
+	sort.Slice(router.Commands, func(i, j int) bool {
+		return len(router.Commands[i].Name) > len(router.Commands[j].Name)
+	})
+
+	// Loop through all commands to find the correct one
 	for _, command := range router.Commands {
-		if equals(command.Name, name, command.IgnoreCase) || stringArrayContains(command.Aliases, name, command.IgnoreCase) {
+		// Define the slice to check
+		toCheck := make([]string, len(command.Aliases)+1)
+		toCheck = append(toCheck, command.Name)
+		toCheck = append(toCheck, command.Aliases...)
+		sort.Slice(toCheck, func(i, j int) bool {
+			return len(toCheck[i]) > len(toCheck[j])
+		})
+
+		// Check the prefix of the string
+		if stringArrayContains(toCheck, name, command.IgnoreCase) {
 			return command
 		}
 	}
@@ -94,10 +110,11 @@ func (router *Router) Handler() func(*discordgo.Session, *discordgo.MessageCreat
 		for _, command := range router.Commands {
 			// Define an array containing the commands name and the aliases
 			toCheck := make([]string, len(command.Aliases)+1)
-			for _, alias := range command.Aliases {
-				toCheck = append(toCheck, alias)
-			}
+			toCheck = append(toCheck, command.Aliases...)
 			toCheck = append(toCheck, command.Name)
+			sort.Slice(toCheck, func(i, j int) bool {
+				return len(toCheck[i]) > len(toCheck[j])
+			})
 
 			// Check if the content is the current command
 			isCommand, content := stringHasPrefix(content, toCheck, command.IgnoreCase)
