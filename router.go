@@ -93,7 +93,7 @@ func (router *Router) Handler() func(*discordgo.Session, *discordgo.MessageCreat
 		// Check if the message starts with a command name
 		for _, command := range router.Commands {
 			// Define an array containing the commands name and the aliases
-			toCheck := make([]string, len(command.Aliases)+1)
+			var toCheck []string
 			for _, alias := range command.Aliases {
 				toCheck = append(toCheck, alias)
 			}
