@@ -108,13 +108,7 @@ func (router *Router) Handler() func(*discordgo.Session, *discordgo.MessageCreat
 
 		// Check if the message starts with a command name
 		for _, command := range router.Commands {
-			// Define an array containing the commands name and the aliases
-			toCheck := make([]string, len(command.Aliases)+1)
-			toCheck = append(toCheck, command.Aliases...)
-			toCheck = append(toCheck, command.Name)
-			sort.Slice(toCheck, func(i, j int) bool {
-				return len(toCheck[i]) > len(toCheck[j])
-			})
+			toCheck := buildCheckPrefixes(command)
 
 			// Check if the content is the current command
 			isCommand, content := stringHasPrefix(content, toCheck, command.IgnoreCase)
@@ -140,4 +134,19 @@ func (router *Router) Handler() func(*discordgo.Session, *discordgo.MessageCreat
 			}
 		}
 	}
+}
+
+func buildCheckPrefixes(command *Command) []string {
+	// Define an array containing the commands name and the aliases
+	toCheck := make([]string, len(command.Aliases)+1)
+	toCheck[0] = command.Name
+	for i, alias := range command.Aliases  {
+		toCheck[1 + i] = alias
+	}
+
+	sort.Slice(toCheck, func(i, j int) bool {
+		return len(toCheck[i]) > len(toCheck[j])
+	})
+
+	return toCheck
 }
