@@ -116,6 +116,9 @@ func specificHelpCommand(ctx *Ctx) {
 			command = ctx.Router.GetCmd(commandName)
 			continue
 		}
+		if command = nil {
+			break
+		}
 		command = command.GetSubCmd(commandName)
 	}
 
