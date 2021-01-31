@@ -4,6 +4,8 @@
 A DiscordGo command router with tons of useful features
 If you find any bugs or if you have a feature request, please tell me using an issue.
 
+**NOTE:** As you may have already noticed, dgc is currently a bit broken and won't work as expected. I strongly recommend using https://github.com/zekroTJA/shireikan as an alternative as it is inspired by dgc so you won't have to change that much. Sometimes in the future I may fix dgc, but currently I don't really have the motivation to do so.
+
 
 ## Basic example
 This just shows a very basic example:
