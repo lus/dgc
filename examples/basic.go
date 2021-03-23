@@ -108,6 +108,9 @@ func main() {
 		// Now we want to define the command handler
 		Handler: objCommand,
 	})
+
+	// Initialize the router
+	router.Initialize(session)
 }
 
 func objCommand(ctx *dgc.Ctx) {
