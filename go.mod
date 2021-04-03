@@ -1,4 +1,4 @@
-module github.com/Lukaesebrot/dgc
+module github.com/lus/dgc
 
 go 1.14
 
